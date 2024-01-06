@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Orbitron&display=swap" rel="stylesheet">
+    
+    <title>Document</title>
+    <style>
+        .container{
+            margin: auto;
+            margin-top: 150px;
+            width: 500px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 100px;
+            padding: 50px;
+            border-radius: 10px;
+            background-color: #000000;
+        }
+        .stopWatch{
+            /* background-color: #ff0000; */
+            height: 50%;
+            font-size: 100px;
+            /* font-family: 'Zen Dots'; */
+            font-family: 'Orbitron', sans-serif;
+            color: #ff9500;
+        }
+        .buttons{
+            /* background-color: #ff0000; */
+            width: 80%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        #start-reversetimer{
+            width: 120px;
+            height: 50px;
+            border-radius: 8px;
+            font-size: 16px;
+            color: white;
+            background-color: rgba(23, 88, 227, 0.833);
+        }
+        #reset-timer{
+            width: 100px;
+            height: 50px;
+            border-radius: 8px;
+            font-size: 16px;
+            color: white;
+            background-color: #ff9500cf;
+        }
+        #start-timer{
+            width: 100px;
+            height: 50px;
+            border-radius: 8px;
+            font-size: 16px;
+            color: white;
+            background-color: rgba(23, 88, 227, 0.833);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="stopWatch">
+            00:00
+        </div>
+    
+        <div class="buttons">
+            <button id="start-reversetimer">Start Timer</button>
+            <button id="reset-timer">Reset</button>
+            <button id="start-timer">Start</button>
+        </div>
+    </div>
+   
+    
+    <script>
+        let startTimerBtn = document.querySelector("#start-reversetimer") ;
+        let resetBtn = document.querySelector("#reset-timer") ;
+        let startBtn = document.querySelector("#start-timer") ;
+        let stopWatch = document.querySelector(".stopWatch") ;
+        let sec = 0 ;
+        let min = 0 ;
+        let id ;
+        function pad(num){
+            if(num < 10){
+                return '0' + num;
+            }else{
+                return num ;
+            }
+        }
+        function startStopWatch(){
+            sec++ ;
+            if(sec===60){
+                sec = 0;
+                min++ ;
+            }
+            paddedmin = pad(min) ;
+            paddedsec = pad(sec) ;
+            stopWatch.innerText=`${paddedmin}:${paddedsec}`
+        }
+        function resetStopWatch(){
+            sec=0 ;
+            min=0 ;
+            stopWatch.innerText=`${pad(min)}:${pad(sec)}` ;
+        }
+        function startReverseTimer(){
+            if(sec>0){
+                stopWatch.innerText=`${pad(min)}:${pad(sec)}` ;
+                sec--;
+            }else{
+                if(min>0){
+                    min--;
+                    sec=59;
+                    stopWatch.innerText=`${pad(min)}:${pad(sec)}` ;
+                }else{
+                    sec= 0;
+                    stopWatch.innerText=`${pad(min)}:${pad(sec)}` ;
+                    clearInterval(id);
+                }
+            }
+
+        }
+        startTimerBtn.addEventListener("click",() => {
+            if(startBtn.innerText === "Stop"){
+                alert(`stop the Stop-Watch first : Click on Stop Button`)
+            }else{
+                let userInput = parseInt(prompt(" give timer value : ") );
+                min = userInput ;
+                sec = 0 ;
+                id = setInterval(() => {
+                    startReverseTimer() ;
+                }, 1000);
+            }
+            
+        })
+        resetBtn.addEventListener("click",() => {
+            resetStopWatch();
+            clearInterval(id) ;
+            startBtn.innerText = "Start"
+        })
+        startBtn.addEventListener("click",() => {
+            if(startBtn.innerText === "Start"){
+                startBtn.innerText = "Stop"
+                sec = 0;
+                min = 0;
+                id = setInterval( startStopWatch, 1000);
+            }else if(startBtn.innerText === "Stop"){
+                startBtn.innerText = "Start"
+                resetStopWatch();
+                clearInterval(id) ;
+            }
+        })
+    </script>
+</body>
+</html>
